@@ -23,6 +23,23 @@ struct node
     node *prox;
 };
 
+
+struct Operacao
+{
+    int tipo;
+    int idTarefa;
+    Tarefa tarefaAnterior;
+    Tarefa tarefaNova;
+    int posicao;
+};
+
+struct nodeOperacao
+{
+    Operacao dado;
+    nodeOperacao *prox;
+};
+
+
 void inserirFinal(node *&head, Tarefa tarefa)
 {
     node *novo = new node();
@@ -176,6 +193,107 @@ void buscarPorStatus(node *head, const string &statusBusca)
     if (!encontrado)
         cout << "Nenhuma tarefa encontrada com esse status!" << endl;
 }
+
+
+
+void pushOperacao(nodeOperacao *&topo, Operacao operacao)
+{
+    nodeOperacao *novo = new nodeOperacao();
+    novo->dado = operacao;
+    novo->prox = topo;
+    topo = novo;
+}
+
+void popOperacao(nodeOperacao *&topo)
+{
+    if (topo == nullptr)
+        return;
+
+    nodeOperacao *p = topo;
+    topo = topo->prox;
+    delete p;
+}
+
+void limparHistorico(nodeOperacao *&topo)
+{
+    while (topo != nullptr)
+        popOperacao(topo);
+}
+
+
+
+bool removerSemConfirmacao(node *&head, int id, Tarefa &removida, int &posicao)
+{
+    node *atual = head;
+    node *anterior = nullptr;
+    posicao = 0;
+
+    while (atual != nullptr && atual->dado.id != id)
+    {
+        anterior = atual;
+        atual = atual->prox;
+        posicao++;
+    }
+
+    if (atual == nullptr)
+        return false;
+
+    removida = atual->dado;
+
+    if (anterior == nullptr)
+        head = atual->prox;
+    else
+        anterior->prox = atual->prox;
+
+    delete atual;
+    return true;
+}
+
+void push(node *&topo, Tarefa tarefa)
+{
+    node *novo = new node();
+    novo->dado = tarefa;
+    novo->prox = topo;
+    topo = novo;
+}
+
+void pop(node *&topo)
+{
+    if (topo == nullptr)
+        return;
+    node *p = topo;
+    topo = topo->prox;
+    delete p;
+}
+
+void consultarTopo(node *topo)
+{
+    if (topo == nullptr)
+    {
+        cout << "Pilha vazia!" << endl;
+        return;
+    }
+    cout << "ID: " << topo->dado.id << endl;
+    cout << "Titulo: " << topo->dado.titulo << endl;
+    cout << "Prioridade: " << topo->dado.prioridade << endl;
+}
+
+void exibirPilha(node *topo)
+{
+    if (topo == nullptr)
+    {
+        cout << "Pilha vazia!" << endl;
+        return;
+    }
+    for (node *p = topo; p != nullptr; p = p->prox)
+    {
+        cout << "ID: " << p->dado.id << endl;
+        cout << "Titulo: " << p->dado.titulo << endl;
+        cout << "Prioridade: " << p->dado.prioridade << endl
+             << endl;
+    }
+}
+
 
 
 int main()
