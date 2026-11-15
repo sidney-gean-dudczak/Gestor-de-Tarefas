@@ -296,6 +296,101 @@ void exibirPilha(node *topo)
 
 
 
+
+void registrarExclusao(nodeOperacao *&topo, Tarefa tarefa, int posicao)
+{
+    Operacao op{};
+    op.tipo = 3;
+    op.idTarefa = tarefa.id;
+    op.tarefaAnterior = tarefa;
+    op.posicao = posicao;
+    pushOperacao(topo, op);
+}
+
+
+
+void removerInicio(node *&head, nodeOperacao *&topoHistorico)
+{
+    if (head == nullptr)
+    {
+        cout << "Nao ha tarefas para remover!" << endl;
+        return;
+    }
+
+    Tarefa removida = head->dado;
+    registrarExclusao(topoHistorico, removida, 0);
+
+    node *aux = head;
+    head = head->prox;
+    delete aux;
+    cout << "Tarefa removida. Use a opcao Desfazer para restaurar." << endl;
+}
+
+void removerFinal(node *&head, nodeOperacao *&topoHistorico)
+{
+    if (head == nullptr)
+    {
+        cout << "Nao ha tarefas para remover!" << endl;
+        return;
+    }
+
+    node *atual = head;
+    node *anterior = nullptr;
+    int posicao = 0;
+
+    while (atual->prox != nullptr)
+    {
+        anterior = atual;
+        atual = atual->prox;
+        posicao++;
+    }
+
+    Tarefa removida = atual->dado;
+    registrarExclusao(topoHistorico, removida, posicao);
+
+    if (anterior == nullptr)
+        head = nullptr;
+    else
+        anterior->prox = nullptr;
+
+    delete atual;
+    cout << "Tarefa removida. Use a opcao Desfazer para restaurar." << endl;
+}
+void removerPorId(node *&head, int id, nodeOperacao *&topoHistorico)
+{
+    node *encontrada = localizarPorId(head, id);
+    if (encontrada == nullptr)
+    {
+        cout << "Tarefa nao encontrada!" << endl;
+        return;
+    }
+
+    char confirmar;
+    cout << "Deseja realmente excluir esta tarefa? (S/N): ";
+    cin >> confirmar;
+
+    if (confirmar == 'N' || confirmar == 'n')
+    {
+        cout << "Exclusao cancelada!" << endl;
+        return;
+    }
+    if (confirmar != 'S' && confirmar != 's')
+    {
+        cout << "Opcao invalida!" << endl;
+        return;
+    }
+
+    Tarefa removida{};
+    int posicao = 0;
+    if (removerSemConfirmacao(head, id, removida, posicao))
+    {
+        registrarExclusao(topoHistorico, removida, posicao);
+        cout << "Tarefa excluida com sucesso!" << endl;
+    }
+}
+
+
+
 int main()
 {
 
