@@ -390,6 +390,107 @@ void removerPorId(node *&head, int id, nodeOperacao *&topoHistorico)
 }
 
 
+void editarTarefa(node *&head, int id, nodeOperacao *&topoHistorico)
+{
+    node *aux = localizarPorId(head, id);
+    if (aux == nullptr)
+    {
+        cout << "Tarefa nao encontrada!" << endl;
+        return;
+    }
+
+    
+    Tarefa anterior = aux->dado;
+
+    cout << "Digite o novo titulo: ";
+    cin.ignore(10000, '\n');
+    getline(cin, aux->dado.titulo);
+
+    cout << "Digite a nova descricao: ";
+    getline(cin, aux->dado.descricao);
+
+    cout << "Digite a nova prioridade (1 a 3): ";
+    cin >> aux->dado.prioridade;
+    while (aux->dado.prioridade < 1 || aux->dado.prioridade > 3)
+    {
+        cout << "Prioridade invalida. Digite 1, 2 ou 3: ";
+        cin >> aux->dado.prioridade;
+    }
+
+    cin.ignore(10000, '\n');
+    cout << "Digite o novo status (Pendente, Em andamento ou Concluida): ";
+    getline(cin, aux->dado.status);
+    while (aux->dado.status != "Pendente" &&
+           aux->dado.status != "Em andamento" &&
+           aux->dado.status != "Concluida" &&
+           aux->dado.status != "Concluída")
+    {
+        cout << "Status invalido. Digite novamente: ";
+        getline(cin, aux->dado.status);
+    }
+
+    cout << "Nova data - dia: ";
+    cin >> aux->dado.prazo.dia;
+    cout << "Mes: ";
+    cin >> aux->dado.prazo.mes;
+    cout << "Ano: ";
+    cin >> aux->dado.prazo.ano;
+
+    Operacao op{};
+    op.tipo = 2;
+    op.idTarefa = id;
+    op.tarefaAnterior = anterior;
+    op.tarefaNova = aux->dado;
+    pushOperacao(topoHistorico, op);
+
+    cout << "Tarefa editada com sucesso!" << endl;
+}
+
+void desfazer(node *&head, nodeOperacao *&topo)
+{
+    if (topo == nullptr)
+    {
+        cout << "Nenhuma operacao para desfazer!" << endl;
+        return;
+    }
+
+    nodeOperacao *p = topo;
+
+    if (p->dado.tipo == 1)
+    {
+        Tarefa ignorada{};
+        int posicaoIgnorada = 0;
+        if (removerSemConfirmacao(head, p->dado.idTarefa, ignorada, posicaoIgnorada))
+        {
+            cout << "Cadastro desfeito com sucesso!" << endl;
+            popOperacao(topo);
+        }
+        else
+            cout << "Nao foi possivel localizar a tarefa cadastrada." << endl;
+    }
+    else if (p->dado.tipo == 2)
+    {
+        node *tarefa = localizarPorId(head, p->dado.idTarefa);
+        if (tarefa != nullptr)
+        {
+            tarefa->dado = p->dado.tarefaAnterior;
+            cout << "Edicao desfeita com sucesso!" << endl;
+            popOperacao(topo);
+        }
+        else
+            cout << "Tarefa nao encontrada; historico mantido." << endl;
+    }
+    else if (p->dado.tipo == 3)
+    {
+        // Restaura a tarefa na posicao que ocupava antes da exclusao.
+        inserirNaPosicao(head, p->dado.tarefaAnterior, p->dado.posicao);
+        cout << "Exclusao desfeita com sucesso!" << endl;
+        popOperacao(topo);
+    }
+    else
+        cout << "Tipo de operacao invalido!" << endl;
+}
+
 
 int main()
 {
