@@ -495,5 +495,156 @@ void desfazer(node *&head, nodeOperacao *&topo)
 int main()
 {
 
+
+    node *head = nullptr;
+    nodeOperacao *topoHistorico = nullptr;
+    int opcao, proximoId = 1, id;
+
+    do
+    {
+        cout << "\n===== GESTOR DE TAREFAS =====" << endl
+             << "1 - Cadastrar tarefa" << endl
+             << "2 - Exibir tarefas" << endl
+             << "3 - Remover primeira tarefa" << endl
+             << "4 - Remover ultima tarefa" << endl
+             << "5 - Editar tarefa" << endl
+             << "6 - Remover tarefa pelo ID" << endl
+             << "7 - Ordenar tarefas por prioridade" << endl
+             << "8 - Buscar por ID" << endl
+             << "9 - Buscar por status" << endl
+             << "10 - Desfazer ultima operacao (Ctrl+Z)" << endl
+             << "0 - Sair" << endl
+             << "Digite a opcao: ";
+        cin >> opcao;
+
+        switch (opcao)
+        {
+        case 1:
+        {
+            Tarefa novaTarefa{};
+
+            cin.ignore(10000, '\n');
+            cout << "Titulo da nova tarefa: ";
+            getline(cin, novaTarefa.titulo);
+
+            cout << "Descricao da tarefa: ";
+            getline(cin, novaTarefa.descricao);
+
+            cout << "Prioridade (1 a 3): ";
+            cin >> novaTarefa.prioridade;
+            while (novaTarefa.prioridade < 1 || novaTarefa.prioridade > 3)
+            {
+                cout << "Prioridade invalida. Digite 1, 2 ou 3: ";
+                cin >> novaTarefa.prioridade;
+            }
+
+            cin.ignore(10000, '\n');
+            cout << "Status (Pendente, Em andamento ou Concluida): ";
+            getline(cin, novaTarefa.status);
+            while (novaTarefa.status != "Pendente" &&
+                   novaTarefa.status != "Em andamento" &&
+                   novaTarefa.status != "Concluida" &&
+                   novaTarefa.status != "Concluída")
+            {
+                cout << "Status invalido. Digite novamente: ";
+                getline(cin, novaTarefa.status);
+            }
+
+            cout << "Dia: ";
+            cin >> novaTarefa.prazo.dia;
+            cout << "Mes: ";
+            cin >> novaTarefa.prazo.mes;
+            cout << "Ano: ";
+            cin >> novaTarefa.prazo.ano;
+
+            while (novaTarefa.prazo.dia < 1 || novaTarefa.prazo.dia > 31)
+            {
+                cout << "Dia invalido. Digite entre 1 e 31: ";
+                cin >> novaTarefa.prazo.dia;
+            }
+            while (novaTarefa.prazo.mes < 1 || novaTarefa.prazo.mes > 12)
+            {
+                cout << "Mes invalido. Digite entre 1 e 12: ";
+                cin >> novaTarefa.prazo.mes;
+            }
+            while (novaTarefa.prazo.ano < 2026)
+            {
+                cout << "Ano invalido. Digite 2026 ou posterior: ";
+                cin >> novaTarefa.prazo.ano;
+            }
+
+            novaTarefa.id = proximoId++;
+            inserirFinal(head, novaTarefa);
+
+            Operacao op{};
+            op.tipo = 1;
+            op.idTarefa = novaTarefa.id;
+            pushOperacao(topoHistorico, op);
+
+            cout << "Tarefa adicionada com sucesso!" << endl;
+            break;
+        }
+        case 2:
+            exibirLista(head);
+            break;
+
+        case 3:
+            removerInicio(head, topoHistorico);
+            break;
+
+        case 4:
+            removerFinal(head, topoHistorico);
+            break;
+
+        case 5:
+            cout << "Digite o ID da tarefa que deseja editar: ";
+            cin >> id;
+            editarTarefa(head, id, topoHistorico);
+            break;
+
+        case 6:
+            cout << "Digite o ID da tarefa que deseja excluir: ";
+            cin >> id;
+            removerPorId(head, id, topoHistorico);
+            break;
+
+        case 7:
+            ordenarPrioridade(head);
+            cout << "Tarefas ordenadas por prioridade!" << endl;
+            break;
+
+        case 8:
+            cout << "Digite o ID da tarefa que deseja encontrar: ";
+            cin >> id;
+            buscarPorId(head, id);
+            break;
+
+        case 9:
+        {
+            string tipoStatus;
+            cin.ignore(10000, '\n');
+            cout << "Digite o status para buscar: ";
+            getline(cin, tipoStatus);
+            buscarPorStatus(head, tipoStatus);
+            break;
+        }
+
+        case 10:
+            desfazer(head, topoHistorico);
+            break;
+
+        case 0:
+            cout << "Programa encerrando..." << endl;
+            break;
+
+        default:
+            cout << "Opcao invalida!" << endl;
+            break;
+        }
+
+    } while (opcao != 0);
+
+    limparLista(head);
+    limparHistorico(topoHistorico);
     return 0;
 }
