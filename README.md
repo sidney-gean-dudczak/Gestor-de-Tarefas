@@ -94,7 +94,7 @@ Responsáveis pelas estruturas `Data`, `Tarefa` e `node`, pelo desenvolvimento d
 - `buscarPorStatus()`
 - `consultarTopo()`
 
-### Rafael e Natael
+### Rafael e Natanael
 
 Responsáveis pelas estruturas `Operacao` e `nodeOperacao`, utilizadas no controle do histórico de operações e na funcionalidade de desfazer ações.
 
