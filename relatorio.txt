@@ -1,0 +1,97 @@
+Gestor de Tarefas
+
+
+O sistema permite cadastrar, editar, excluir, pesquisar e organizar tarefas por prioridade. Durante o desenvolvimento, foram consideradas decisões de projeto que buscavam manter o código organizado, facilitar a manipulação dos dados e aplicar os conceitos treinados na disciplina.
+
+Decisões de projeto e estruturas de dados
+
+Estruturas
+
+Foi usada uma estrutura struct para organizar as informações do sistema.
+
+A struct Data armazena o prazo de cada tarefa, com os campos dia, mês e ano.
+
+Uma struct Tarefa reúne os dados principais de cada atividade, como identificador, título, descrição, prioridade, status e prazo.
+
+Um nó struct representa cada elemento da lista encadeada, armazenando uma tarefa e um ponteiro para o próximo elemento.
+
+Também foram usados ​​as structs Operação e nodeOperação para registrar as alterações realizadas no sistema e organizar o histórico de operações.
+
+Essa organização permite agrupar informações relacionadas e facilitar a manutenção e manipulação dos dados.
+
+Lista simplesmente encadeada
+
+Uma lista simplesmente encadeada foi escolhida para armazenar as tarefas porque permite alocação dinâmica de memória e crescimento conforme a quantidade de elementos cadastrados.
+
+Cada nó contém uma tarefa e um ponteiro para o próximo nó. Desta forma, não é necessário definir previamente uma quantidade máxima de tarefas.
+
+A estrutura também permite realizar operações como inserção, remoção, pesquisa e percorrimento dos elementos.
+
+As principais operações têm as seguintes complexidades:
+
+- Inserção no início: O(1).
+
+- Inserção no final: O(n), pois é necessário percorrer a lista até o último elemento.
+
+- Busca por ID: O(n).
+
+- Remoção no início: O(1).
+
+- Remoção no final: O(n).
+
+- Percorremento completo: O(n).
+
+Pilha encadeada e histórico de operações
+
+Foi usada uma pilha encadeada para implementar o histórico de operações, permitindo desfazer ações realizadas pelo usuário.
+
+A escolha dessa estrutura está relacionada ao princípio LIFO (Last In, First Out), no qual o último elemento inserido é o primeiro a ser removido.
+
+Esse comportamento é adequado para a funcionalidade Ctrl+Z, pois permite fazer a primeira operação mais recente.
+
+O histórico registra três tipos de operações: cadastro, edição e exclusão. Para permitir a restauração dos dados, são armazenadas informações da tarefa e, quando necessário, sua posição original na lista.
+
+As operações de inserção e remoção no topo da pilha possuem complexidade O(1).
+
+O código também tem funções de manipulação de uma pilha de tarefas, como push, pop, consultarTopo e exibirPilha.
+
+Algoritmo de ordenação
+
+Para organizar as tarefas por prioridade, foi implementado o algoritmo Selection Sort.
+
+Esse algoritmo percorre a lista procurando o elemento de maior prioridade na parte ainda não ordenada. Em seguida, troca esse elemento com o elemento da posição atual.
+
+O processo se repete até que todos os elementos estejam ordenados.
+
+No sistema, a ordenação é feita em ordem decrescente, ou seja, as tarefas com maior prioridade aparecem primeiro.
+
+Complexidade do algoritmo:
+
+- Melhor caso: O(n²).
+
+- Caso médio: O(n²).
+
+- Pior caso: O(n²).
+
+- Complexidade do espaço auxiliar: O(1).
+
+A complexidade quadrática acontece porque o algoritmo realiza comparações entre os elementos da lista por meio de laços de repetição aninhados.
+
+O Selection Sort foi usado para ser um algoritmo de ordenação simples de entender e implementar, sendo adequado para demonstrar os conceitos treinados na disciplina.
+
+Gerenciamento de memória
+
+O sistema usa alocação dinâmica de memória por meio dos operadores new e delete.
+
+O operador new é usado para criar novos nós durante a inserção de tarefas na lista e durante o registro de operações no histórico.
+
+O operador delete é usado para liberar a memória dos nós removidos, evitando que você ocupe espaço desnecessariamente.
+
+Também foram criadas as funções limparLista e limparHistorico, responsáveis ​​por percorrer suas respectivas estruturas e liberar os nós restantes quando o programa for encerrado.
+
+Esse gerenciamento é importante porque as estruturas constituídas são dinâmicas e precisam ter sua memória liberada corretamente.
+
+
+A lista simplesmente encadeada foi usada para armazenar as tarefas, enquanto a pilha de histórico permitiu implementar o mecanismo de desfazer operações.
+
+O Selection Sort foi usado para organizar as tarefas por prioridade, e o gerenciamento dinâmico de memória permitiu que as estruturas crescessem conforme a necessidade do programa.
