@@ -22,6 +22,7 @@ struct node
     Tarefa dado;
     node *prox;
 };
+node *localizarPorId(node *head, int id);
 
 
 struct Operacao
