@@ -41,6 +41,7 @@ struct nodeOperacao
 };
 
 
+// Insere uma nova tarefa no final da lista
 void inserirFinal(node *&head, Tarefa tarefa)
 {
     node *novo = new node();
@@ -59,6 +60,8 @@ void inserirFinal(node *&head, Tarefa tarefa)
 
     p->prox = novo;
 }
+
+// Exibe todas as tarefas cadastradas
 void exibirLista(node *head)
 {
     if (head == nullptr)
@@ -82,6 +85,7 @@ void exibirLista(node *head)
     }
 }
 
+// Localiza uma tarefa na lista utilizando seu ID
 void buscarPorId(node *head, int id)
 {
     node *aux = localizarPorId(head, id);
@@ -111,6 +115,7 @@ void limparLista(node *&head)
     }
 }
 
+// Insere uma tarefa em uma posição específica da lista
 void inserirNaPosicao(node *&head, Tarefa tarefa, int posicao)
 {
     node *novo = new node();
@@ -143,6 +148,7 @@ node *localizarPorId(node *head, int id)
     return aux;
 }
 
+// Ordena as tarefas por prioridade utilizando Selection Sort
 void ordenarPrioridade(node *head)
 {
     if (head == nullptr || head->prox == nullptr)
@@ -168,7 +174,7 @@ void ordenarPrioridade(node *head)
     }
 }
 
-
+// Pesquisa e exibe todas as tarefas que possuem determinado status
 void buscarPorStatus(node *head, const string &statusBusca)
 {
     bool encontrado = false;
@@ -196,8 +202,8 @@ void buscarPorStatus(node *head, const string &statusBusca)
 }
 
 
-
-void pushOperacao(nodeOperacao *&topo, Operacao operacao)
+// Insere uma nova operação no topo da pilha de histórico
+void pushOperacao(nodeOperacao *&topo, Operacao operacao) 
 {
     nodeOperacao *novo = new nodeOperacao();
     novo->dado = operacao;
@@ -205,6 +211,7 @@ void pushOperacao(nodeOperacao *&topo, Operacao operacao)
     topo = novo;
 }
 
+// Remove a operação que está no topo do histórico
 void popOperacao(nodeOperacao *&topo)
 {
     if (topo == nullptr)
@@ -215,6 +222,7 @@ void popOperacao(nodeOperacao *&topo)
     delete p;
 }
 
+// Libera toda a memória utilizada pela pilha de histórico
 void limparHistorico(nodeOperacao *&topo)
 {
     while (topo != nullptr)
@@ -222,7 +230,7 @@ void limparHistorico(nodeOperacao *&topo)
 }
 
 
-
+// Remove uma tarefa pelo ID e retorna seus dados e posição original
 bool removerSemConfirmacao(node *&head, int id, Tarefa &removida, int &posicao)
 {
     node *atual = head;
@@ -250,6 +258,7 @@ bool removerSemConfirmacao(node *&head, int id, Tarefa &removida, int &posicao)
     return true;
 }
 
+// Insere uma tarefa no topo da pilha
 void push(node *&topo, Tarefa tarefa)
 {
     node *novo = new node();
@@ -258,6 +267,7 @@ void push(node *&topo, Tarefa tarefa)
     topo = novo;
 }
 
+// Remove a tarefa que está no topo da pilha
 void pop(node *&topo)
 {
     if (topo == nullptr)
@@ -267,6 +277,7 @@ void pop(node *&topo)
     delete p;
 }
 
+// Consulta os dados da tarefa que está no topo da pilha
 void consultarTopo(node *topo)
 {
     if (topo == nullptr)
@@ -279,6 +290,8 @@ void consultarTopo(node *topo)
     cout << "Prioridade: " << topo->dado.prioridade << endl;
 }
 
+
+// Exibe todas as tarefas armazenadas na pilha
 void exibirPilha(node *topo)
 {
     if (topo == nullptr)
@@ -297,7 +310,7 @@ void exibirPilha(node *topo)
 
 
 
-
+// Registra uma exclusão para permitir que ela seja desfeita.
 void registrarExclusao(nodeOperacao *&topo, Tarefa tarefa, int posicao)
 {
     Operacao op{};
@@ -309,7 +322,7 @@ void registrarExclusao(nodeOperacao *&topo, Tarefa tarefa, int posicao)
 }
 
 
-
+// Remove a primeira tarefa da lista
 void removerInicio(node *&head, nodeOperacao *&topoHistorico)
 {
     if (head == nullptr)
@@ -327,6 +340,7 @@ void removerInicio(node *&head, nodeOperacao *&topoHistorico)
     cout << "Tarefa removida. Use a opcao Desfazer para restaurar." << endl;
 }
 
+// Remove a última tarefa da lista
 void removerFinal(node *&head, nodeOperacao *&topoHistorico)
 {
     if (head == nullptr)
@@ -357,6 +371,8 @@ void removerFinal(node *&head, nodeOperacao *&topoHistorico)
     delete atual;
     cout << "Tarefa removida. Use a opcao Desfazer para restaurar." << endl;
 }
+
+// Exclui uma tarefa pelo ID após confirmação do usuário
 void removerPorId(node *&head, int id, nodeOperacao *&topoHistorico)
 {
     node *encontrada = localizarPorId(head, id);
@@ -390,7 +406,7 @@ void removerPorId(node *&head, int id, nodeOperacao *&topoHistorico)
     }
 }
 
-
+// Localiza e permite alterar os dados de uma tarefa
 void editarTarefa(node *&head, int id, nodeOperacao *&topoHistorico)
 {
     node *aux = localizarPorId(head, id);
@@ -447,6 +463,8 @@ void editarTarefa(node *&head, int id, nodeOperacao *&topoHistorico)
     cout << "Tarefa editada com sucesso!" << endl;
 }
 
+
+// Desfaz a última operação de cadastro, edição ou exclusão
 void desfazer(node *&head, nodeOperacao *&topo)
 {
     if (topo == nullptr)
